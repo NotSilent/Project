@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IHoverable
+public interface IUsable
 {
+    void Use();
+
     void StartBeingHovered();
 
     void StopBeingHovered();

@@ -6,12 +6,15 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float speed = 10;
-
     [SerializeField] private Crosshair crosshair;
+    [SerializeField] private float speed = 10f;
+    [SerializeField] private float range = 2f;
+    [SerializeField] private float attackCooldown = 10f;
+    [SerializeField] private float damage = 50f;
 
     private Rigidbody rigidBody;
     private GameObject currentTarget;
+    private float timeSInceLastAttack;
 
     private void OnEnable()
     {
@@ -22,6 +25,20 @@ public class Player : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody>();
 
+        timeSInceLastAttack = attackCooldown;
+    }
+
+    private void Update()
+    {
+        timeSInceLastAttack += Time.deltaTime;
+        if (Input.GetMouseButton(0))
+        {
+            if (currentTarget)
+            {
+                ManageDamageableTarget();
+                ManageUsableTarget();
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -47,6 +64,38 @@ public class Player : MonoBehaviour
         else
         {
             Debug.Log("Lookig at " + currentTarget.transform.name);
+        }
+    }
+
+
+    private void ManageUsableTarget()
+    {
+        IUsable iUsable = currentTarget.GetComponent<IUsable>();
+        if (iUsable != null)
+        {
+
+            float distanceFromPlayer = Vector3.Distance(gameObject.transform.position, currentTarget.transform.position);
+            if (distanceFromPlayer < range)
+            {
+                iUsable.Use();
+            }
+        }
+    }
+
+    private void ManageDamageableTarget()
+    {
+        IDamageable iDamageable = currentTarget.GetComponent<IDamageable>();
+        if (iDamageable != null)
+        {
+            if (timeSInceLastAttack > attackCooldown)
+            {
+                float distanceFromPlayer = Vector3.Distance(gameObject.transform.position, currentTarget.transform.position);
+                if (distanceFromPlayer < range)
+                {
+                    iDamageable.DealDamage(50f);
+                    timeSInceLastAttack = 0f;
+                }
+            }
         }
     }
 }

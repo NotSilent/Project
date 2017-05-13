@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         currentHealth -= damage;
 
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
         {
             Destroy(gameObject);
         }

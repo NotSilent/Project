@@ -55,10 +55,10 @@ public class Crosshair : MonoBehaviour
                 crosshairImage.color = Color.white;
             }
 
-            IHoverable iHoverable = crosshairTarget.GetComponent<IHoverable>();
-            if (iHoverable != null)
+            IUsable iUsable = crosshairTarget.GetComponent<IUsable>();
+            if (iUsable != null)
             {
-                iHoverable.StartBeingHovered();
+                iUsable.StartBeingHovered();
             }
         }
     }
@@ -67,10 +67,10 @@ public class Crosshair : MonoBehaviour
     {
         if (crosshairTarget)
         {
-            IHoverable iHoverable = crosshairTarget.GetComponent<IHoverable>();
-            if (iHoverable != null)
+            IUsable iUsable = crosshairTarget.GetComponent<IUsable>();
+            if (iUsable != null)
             {
-                iHoverable.StopBeingHovered();
+                iUsable.StopBeingHovered();
             }
         }
     }
