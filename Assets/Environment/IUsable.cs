@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IUsable
 {
-    void Use();
+    void Use(bool isTriggeredByPlayer);
 
     void StartBeingHovered();
 

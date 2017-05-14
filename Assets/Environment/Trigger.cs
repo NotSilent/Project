@@ -29,8 +29,8 @@ public class Trigger : MonoBehaviour, IUsable
         material.color = Color.white;
     }
 
-    public void Use()
+    public void Use(bool isTriggeredByPlayer)
     {
-        iUsable.Use();
+        iUsable.Use(false);
     }
 }

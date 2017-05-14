@@ -84,7 +84,7 @@ public class Player : MonoBehaviour
             float distanceFromPlayer = Vector3.Distance(gameObject.transform.position, currentTarget.transform.position);
             if (distanceFromPlayer < range)
             {
-                iUsable.Use();
+                iUsable.Use(true);
             }
         }
     }

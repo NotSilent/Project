@@ -5,16 +5,19 @@ using UnityEngine;
 
 public class Door : MonoBehaviour, IUsable
 {
+    [SerializeField] private bool isTriggerOnly = false;
+
     private Material material;
+    private Animator animator;
 
     private bool isClosed;
 
-
     private void Start()
     {
+        animator = GetComponent<Animator>();
         material = GetComponent<Renderer>().material;
 
-        isClosed = false;
+        isClosed = true;
     }
 
     public void StartBeingHovered()
@@ -27,18 +30,20 @@ public class Door : MonoBehaviour, IUsable
         material.color = Color.green;
     }
 
-    public void Use()
+    public void Use(bool isTriggeredByPlayer)
     {
-        // TODO Animations
-        if (isClosed)
+        if (isTriggeredByPlayer != isTriggerOnly || !isTriggeredByPlayer)
         {
-            transform.Translate(Vector3.right, Space.Self);
-            isClosed = false;
-        }
-        else
-        {
-            transform.Translate(Vector3.left, Space.Self);
-            isClosed = true;
+            if (isClosed)
+            {
+                isClosed = false;
+                animator.SetTrigger("tOpen");
+            }
+            else
+            {
+                isClosed = true;
+                animator.SetTrigger("tClose");
+            }
         }
     }
 }
