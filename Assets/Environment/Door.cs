@@ -9,13 +9,24 @@ public class Door : MonoBehaviour, IUsable
 
     private bool isClosed;
 
+
     private void Start()
     {
         material = GetComponent<Renderer>().material;
 
         isClosed = false;
     }
-    
+
+    public void StartBeingHovered()
+    {
+        material.color = Color.yellow;
+    }
+
+    public void StopBeingHovered()
+    {
+        material.color = Color.green;
+    }
+
     public void Use()
     {
         // TODO Animations
@@ -29,15 +40,5 @@ public class Door : MonoBehaviour, IUsable
             transform.Translate(Vector3.left, Space.Self);
             isClosed = true;
         }
-    }
-
-    public void StartBeingHovered()
-    {
-        material.color = Color.yellow;
-    }
-
-    public void StopBeingHovered()
-    {
-        material.color = Color.green;
     }
 }

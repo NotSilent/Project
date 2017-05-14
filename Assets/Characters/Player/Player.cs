@@ -36,6 +36,13 @@ public class Player : MonoBehaviour
             if (currentTarget)
             {
                 ManageDamageableTarget();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (currentTarget)
+            {
                 ManageUsableTarget();
             }
         }
@@ -45,7 +52,7 @@ public class Player : MonoBehaviour
     {
         Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         direction = transform.TransformDirection(direction);
-        rigidBody.velocity = direction * speed;
+        rigidBody.velocity = direction * speed + new Vector3(0, rigidBody.velocity.y, 0);
     }
 
     private void OnDisable()

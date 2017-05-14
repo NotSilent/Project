@@ -10,19 +10,19 @@ public class ThirdPersonCamera : MonoBehaviour
 
     private void Start()
     {
-        GetPlayer();
+        player = GetPlayer();
 
         offset = transform.position - player.transform.position;
     }
 
-    private void GetPlayer()
+    private GameObject GetPlayer()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 
         Assert.IsNotNull(players, "Player not found in scene. Please add one.");
         Assert.IsFalse(players.Length > 1, "Too many players in scene. Please delete all but one player.");
 
-        player = players[0].gameObject;
+        return players[0].gameObject;
     }
 
     private void LateUpdate()
