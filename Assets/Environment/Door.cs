@@ -6,8 +6,8 @@ using UnityEngine;
 public class Door : MonoBehaviour, IUsable
 {
     [SerializeField] private bool isTriggerOnly = false;
-
-    private Material material;
+    [SerializeField] private new ParticleSystem particleSystem;
+    
     private Animator animator;
 
     private bool isClosed;
@@ -15,19 +15,18 @@ public class Door : MonoBehaviour, IUsable
     private void Start()
     {
         animator = GetComponent<Animator>();
-        material = GetComponent<Renderer>().material;
 
         isClosed = true;
     }
 
     public void StartBeingHovered()
     {
-        material.color = Color.yellow;
+        particleSystem.Play();
     }
 
     public void StopBeingHovered()
     {
-        material.color = Color.green;
+        particleSystem.Stop();
     }
 
     public void Use(bool isTriggeredByPlayer)

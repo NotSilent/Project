@@ -7,11 +7,14 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private Crosshair crosshair;
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Socket socket;
     [SerializeField] private float speed = 10f;
     [SerializeField] private float range = 2f;
     [SerializeField] private float attackCooldown = 10f;
     [SerializeField] private float damage = 50f;
 
+    private new Collider collider;
     private Rigidbody rigidBody;
     private GameObject currentTarget;
     private float timeSInceLastAttack;
@@ -23,6 +26,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        collider = GetComponent<Collider>();
         rigidBody = GetComponent<Rigidbody>();
 
         timeSInceLastAttack = attackCooldown;
@@ -36,6 +40,14 @@ public class Player : MonoBehaviour
             if (currentTarget)
             {
                 ManageDamageableTarget();
+            }
+        }
+
+        if (Input.GetMouseButton(1))
+        {
+            if (currentTarget)
+            {
+                ShootProjectile();
             }
         }
 
@@ -66,11 +78,11 @@ public class Player : MonoBehaviour
 
         if (!currentTarget)
         {
-            Debug.Log("Looking at sky");
+            //Debug.Log("Looking at sky");
         }
         else
         {
-            Debug.Log("Lookig at " + currentTarget.transform.name);
+            //Debug.Log("Lookig at " + currentTarget.transform.name);
         }
     }
 
@@ -104,5 +116,36 @@ public class Player : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void ShootProjectile()
+    {
+        if (timeSInceLastAttack > attackCooldown)
+        {
+            Vector3 targetWorldSpaceCoords = GetTargetWorldSpace();
+            if(targetWorldSpaceCoords == Vector3.zero)
+            {
+                return;
+            }
+            Vector3 launchDirection = targetWorldSpaceCoords - socket.transform.position;
+
+            // Create socket in hand and launch from there
+            GameObject projectile = Instantiate(projectilePrefab, socket.transform.position, Quaternion.identity);
+            Physics.IgnoreCollision(collider, projectile.GetComponent<Collider>());
+            projectile.GetComponent<Projectile>().LaunchProjectile(launchDirection);
+            timeSInceLastAttack = 0f;
+        }
+    }
+
+    // Consider refactoring Crosshair observer
+    private Vector3 GetTargetWorldSpace()
+    {
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit raycastHit;
+        if (Physics.Raycast(ray, out raycastHit))
+        {
+            return raycastHit.point;
+        }
+        return Vector3.zero;
     }
 }

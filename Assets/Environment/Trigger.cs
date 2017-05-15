@@ -7,30 +7,46 @@ using UnityEngine.Assertions;
 public class Trigger : MonoBehaviour, IUsable
 {
     [SerializeField] private GameObject triggerableObject;
+    [SerializeField] private new ParticleSystem particleSystem;
 
     private IUsable iUsable;
-    private Material material;
+    private Animator animator;
+
+    private bool isClosed;
 
     private void Start()
     {
-        material = GetComponent<Renderer>().material;
+        animator = GetComponent<Animator>();
 
         iUsable = triggerableObject.GetComponent<IUsable>();
         Assert.IsNotNull(iUsable);
+
+        isClosed = true;
     }
 
     public void StartBeingHovered()
     {
-        material.color = Color.gray;
+        particleSystem.Play();
     }
 
     public void StopBeingHovered()
     {
-        material.color = Color.white;
+        particleSystem.Stop();
     }
 
     public void Use(bool isTriggeredByPlayer)
     {
+        if (isClosed)
+        {
+            isClosed = false;
+            animator.SetTrigger("tOn");
+        }
+        else
+        {
+            isClosed = true;
+            animator.SetTrigger("tOff");
+        }
+
         iUsable.Use(false);
     }
 }
