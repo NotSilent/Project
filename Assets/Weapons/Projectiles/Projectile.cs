@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour
 
         if (iDamageable != null)
         {
-            iDamageable.DealDamage(damage);
+            iDamageable.TakeDamage(damage);
         }
         Debug.Log(collision.gameObject.transform.name);
         Destroy(gameObject);

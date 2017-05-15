@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(Collider))]
 public class Player : MonoBehaviour
 {
     [SerializeField] private Crosshair crosshair;
@@ -78,11 +76,11 @@ public class Player : MonoBehaviour
 
         if (!currentTarget)
         {
-            //Debug.Log("Looking at sky");
+            Debug.Log("Looking at sky");
         }
         else
         {
-            //Debug.Log("Lookig at " + currentTarget.transform.name);
+            Debug.Log("Lookig at " + currentTarget.transform.name);
         }
     }
 
@@ -111,7 +109,7 @@ public class Player : MonoBehaviour
                 float distanceFromPlayer = Vector3.Distance(gameObject.transform.position, currentTarget.transform.position);
                 if (distanceFromPlayer < range)
                 {
-                    iDamageable.DealDamage(50f);
+                    iDamageable.TakeDamage(50f);
                     timeSInceLastAttack = 0f;
                 }
             }
