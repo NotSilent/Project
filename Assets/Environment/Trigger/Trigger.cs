@@ -10,6 +10,7 @@ public class Trigger : MonoBehaviour, IUsable
     [SerializeField] private new ParticleSystem particleSystem;
 
     private IUsable iUsable;
+    private AudioSource audioSource;
     private Animator animator;
 
     private bool isClosed;
@@ -17,6 +18,7 @@ public class Trigger : MonoBehaviour, IUsable
     private void Start()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
 
         iUsable = triggerableObject.GetComponent<IUsable>();
         Assert.IsNotNull(iUsable);
@@ -27,11 +29,13 @@ public class Trigger : MonoBehaviour, IUsable
     public void StartBeingHovered()
     {
         particleSystem.Play();
+        audioSource.Play();
     }
 
     public void StopBeingHovered()
     {
         particleSystem.Stop();
+        audioSource.Stop();
     }
 
     public void Use(bool isTriggeredByPlayer)

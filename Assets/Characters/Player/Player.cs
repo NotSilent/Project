@@ -5,17 +5,28 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private Crosshair crosshair;
+    [SerializeField] private PlayerUI playerUI;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Socket socket;
     [SerializeField] private float speed = 10f;
     [SerializeField] private float range = 2f;
     [SerializeField] private float attackCooldown = 10f;
     [SerializeField] private float damage = 50f;
+    [SerializeField] private float health = 100f;
+    [SerializeField] private float healthRegeneration = 10f;
+    [SerializeField] private float stamina = 100f;
+    [SerializeField] private float staminaRegeneration = 10f;
+    [SerializeField] private float basicStaminaCost = 50f;
+    [SerializeField] private float mana = 100f;
+    [SerializeField] private float manaRegeneration = 10f;
 
     private new Collider collider;
     private Rigidbody rigidBody;
     private GameObject currentTarget;
     private float timeSInceLastAttack;
+    private float currentHealth;
+    private float currentStamina;
+    private float currentMana;
 
     private void OnEnable()
     {
@@ -28,10 +39,15 @@ public class Player : MonoBehaviour
         rigidBody = GetComponent<Rigidbody>();
 
         timeSInceLastAttack = attackCooldown;
+        currentHealth = health;
+        currentStamina = stamina;
+        currentMana = mana;
     }
 
     private void Update()
     {
+        RegenerateResources();
+
         timeSInceLastAttack += Time.deltaTime;
         if (Input.GetMouseButton(0))
         {
@@ -104,13 +120,15 @@ public class Player : MonoBehaviour
         IDamageable iDamageable = currentTarget.GetComponent<IDamageable>();
         if (iDamageable != null)
         {
-            if (timeSInceLastAttack > attackCooldown)
+            if (timeSInceLastAttack > attackCooldown && currentStamina > basicStaminaCost)
             {
                 float distanceFromPlayer = Vector3.Distance(gameObject.transform.position, currentTarget.transform.position);
                 if (distanceFromPlayer < range)
                 {
                     iDamageable.TakeDamage(50f);
                     timeSInceLastAttack = 0f;
+                    currentStamina -= basicStaminaCost;
+                    playerUI.UpdateStaminaBar(GetRelativeStamina());
                 }
             }
         }
@@ -118,7 +136,7 @@ public class Player : MonoBehaviour
 
     private void ShootProjectile()
     {
-        if (timeSInceLastAttack > attackCooldown)
+        if (timeSInceLastAttack > attackCooldown && currentMana > projectilePrefab.GetComponent<Projectile>().ManaCost)
         {
             Vector3 targetWorldSpaceCoords = GetTargetWorldSpace();
             if(targetWorldSpaceCoords == Vector3.zero)
@@ -128,9 +146,12 @@ public class Player : MonoBehaviour
             Vector3 launchDirection = targetWorldSpaceCoords - socket.transform.position;
 
             // Create socket in hand and launch from there
-            GameObject projectile = Instantiate(projectilePrefab, socket.transform.position, Quaternion.identity);
-            Physics.IgnoreCollision(collider, projectile.GetComponent<Collider>());
-            projectile.GetComponent<Projectile>().LaunchProjectile(launchDirection);
+            GameObject projectileObject = Instantiate(projectilePrefab, socket.transform.position, Quaternion.identity);
+            Physics.IgnoreCollision(collider, projectileObject.GetComponent<Collider>());
+            Projectile projectile = projectileObject.GetComponent<Projectile>();
+            projectile.LaunchProjectile(launchDirection);
+            currentMana -= projectile.ManaCost;
+            playerUI.UpdateManaBar(GetRelativeMana());
             timeSInceLastAttack = 0f;
         }
     }
@@ -145,5 +166,39 @@ public class Player : MonoBehaviour
             return raycastHit.point;
         }
         return Vector3.zero;
+    }
+
+    private void RegenerateResources()
+    {
+        if(currentHealth < health)
+        {
+            currentHealth += healthRegeneration * Time.deltaTime;
+            playerUI.UpdateHealthBar(GetRelativeHealth());
+        }
+        if (currentStamina < stamina)
+        {
+            currentStamina += staminaRegeneration * Time.deltaTime;
+            playerUI.UpdateStaminaBar(GetRelativeStamina());
+        }
+        if (currentMana < mana)
+        {
+            currentMana += manaRegeneration * Time.deltaTime;
+            playerUI.UpdateManaBar(GetRelativeMana());
+        }
+    }
+
+    private float GetRelativeHealth()
+    {
+        return Mathf.Clamp(currentHealth / health, 0, 1);
+    }
+
+    private float GetRelativeStamina()
+    {
+        return Mathf.Clamp(currentStamina / stamina, 0, 1);
+    }
+
+    private float GetRelativeMana()
+    {
+        return Mathf.Clamp(currentMana / mana, 0, 1);
     }
 }

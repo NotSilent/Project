@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class Projectile : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;
     [SerializeField] private float damage = 50f;
+    [SerializeField] private float manaCost = 50f;
 
     private new Collider collider;
     private Rigidbody rigidBody;
@@ -31,5 +33,10 @@ public class Projectile : MonoBehaviour
         }
         Debug.Log(collision.gameObject.transform.name);
         Destroy(gameObject);
+    }
+
+    public float ManaCost
+    {
+        get { return manaCost; }
     }
 }
