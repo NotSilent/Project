@@ -7,8 +7,10 @@ public class Player : MonoBehaviour
     [SerializeField] private Crosshair crosshair;
     [SerializeField] private PlayerUI playerUI;
     [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private Socket socket;
-    [SerializeField] private float speed = 10f;
+    [SerializeField] private Socket weaponSocket;
+    [SerializeField] private Socket groundCheck;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float jumpPower = 5f;
     [SerializeField] private float range = 2f;
     [SerializeField] private float attackCooldown = 10f;
     [SerializeField] private float damage = 50f;
@@ -79,6 +81,11 @@ public class Player : MonoBehaviour
             {
                 ManageUsableTarget();
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && IsPlayerGrounded())
+        {
+            rigidBody.velocity += Vector3.up * jumpPower;
         }
     }
 
@@ -151,10 +158,10 @@ public class Player : MonoBehaviour
             {
                 return;
             }
-            Vector3 launchDirection = targetWorldSpaceCoords - socket.transform.position;
+            Vector3 launchDirection = targetWorldSpaceCoords - weaponSocket.transform.position;
 
             // Create socket in hand and launch from there
-            GameObject projectileObject = Instantiate(projectilePrefab, socket.transform.position, Quaternion.identity);
+            GameObject projectileObject = Instantiate(projectilePrefab, weaponSocket.transform.position, Quaternion.identity);
             Physics.IgnoreCollision(collider, projectileObject.GetComponent<Collider>());
             Projectile projectile = projectileObject.GetComponent<Projectile>();
             projectile.LaunchProjectile(launchDirection);
@@ -208,5 +215,16 @@ public class Player : MonoBehaviour
     private float GetRelativeMana()
     {
         return Mathf.Clamp(currentMana / resources.mana, 0, 1);
+    }
+
+    private bool IsPlayerGrounded()
+    {
+        Collider[] colliders = Physics.OverlapBox(groundCheck.transform.position, Vector3.one * 0.005f);
+
+        if(colliders.Length != 1 && colliders[0] != collider)
+        {
+            return true;
+        }
+        return false;
     }
 }
