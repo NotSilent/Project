@@ -12,13 +12,21 @@ public class Player : MonoBehaviour
     [SerializeField] private float range = 2f;
     [SerializeField] private float attackCooldown = 10f;
     [SerializeField] private float damage = 50f;
-    [SerializeField] private float health = 100f;
-    [SerializeField] private float healthRegeneration = 10f;
-    [SerializeField] private float stamina = 100f;
-    [SerializeField] private float staminaRegeneration = 10f;
-    [SerializeField] private float basicStaminaCost = 50f;
-    [SerializeField] private float mana = 100f;
-    [SerializeField] private float manaRegeneration = 10f;
+
+    [System.Serializable]
+    public struct Resources
+    {
+        public float health;
+        public float healthRegeneration;
+        public float stamina;
+        public float staminaRegeneration;
+        public float basicStaminaCost;
+        public float mana;
+        public float manaRegeneration;
+    }
+
+    [SerializeField]
+    private Resources resources;
 
     private new Collider collider;
     private Rigidbody rigidBody;
@@ -39,9 +47,9 @@ public class Player : MonoBehaviour
         rigidBody = GetComponent<Rigidbody>();
 
         timeSInceLastAttack = attackCooldown;
-        currentHealth = health;
-        currentStamina = stamina;
-        currentMana = mana;
+        currentHealth = resources.health;
+        currentStamina = resources.stamina;
+        currentMana = resources.mana;
     }
 
     private void Update()
@@ -120,14 +128,14 @@ public class Player : MonoBehaviour
         IDamageable iDamageable = currentTarget.GetComponent<IDamageable>();
         if (iDamageable != null)
         {
-            if (timeSInceLastAttack > attackCooldown && currentStamina > basicStaminaCost)
+            if (timeSInceLastAttack > attackCooldown && currentStamina > resources.basicStaminaCost)
             {
                 float distanceFromPlayer = Vector3.Distance(gameObject.transform.position, currentTarget.transform.position);
                 if (distanceFromPlayer < range)
                 {
                     iDamageable.TakeDamage(50f);
                     timeSInceLastAttack = 0f;
-                    currentStamina -= basicStaminaCost;
+                    currentStamina -= resources.basicStaminaCost;
                     playerUI.UpdateStaminaBar(GetRelativeStamina());
                 }
             }
@@ -139,7 +147,7 @@ public class Player : MonoBehaviour
         if (timeSInceLastAttack > attackCooldown && currentMana > projectilePrefab.GetComponent<Projectile>().ManaCost)
         {
             Vector3 targetWorldSpaceCoords = GetTargetWorldSpace();
-            if(targetWorldSpaceCoords == Vector3.zero)
+            if (targetWorldSpaceCoords == Vector3.zero)
             {
                 return;
             }
@@ -170,35 +178,35 @@ public class Player : MonoBehaviour
 
     private void RegenerateResources()
     {
-        if(currentHealth < health)
+        if (currentHealth < resources.health)
         {
-            currentHealth += healthRegeneration * Time.deltaTime;
+            currentHealth += resources.healthRegeneration * Time.deltaTime;
             playerUI.UpdateHealthBar(GetRelativeHealth());
         }
-        if (currentStamina < stamina)
+        if (currentStamina < resources.stamina)
         {
-            currentStamina += staminaRegeneration * Time.deltaTime;
+            currentStamina += resources.staminaRegeneration * Time.deltaTime;
             playerUI.UpdateStaminaBar(GetRelativeStamina());
         }
-        if (currentMana < mana)
+        if (currentMana < resources.mana)
         {
-            currentMana += manaRegeneration * Time.deltaTime;
+            currentMana += resources.manaRegeneration * Time.deltaTime;
             playerUI.UpdateManaBar(GetRelativeMana());
         }
     }
 
     private float GetRelativeHealth()
     {
-        return Mathf.Clamp(currentHealth / health, 0, 1);
+        return Mathf.Clamp(currentHealth / resources.health, 0, 1);
     }
 
     private float GetRelativeStamina()
     {
-        return Mathf.Clamp(currentStamina / stamina, 0, 1);
+        return Mathf.Clamp(currentStamina / resources.stamina, 0, 1);
     }
 
     private float GetRelativeMana()
     {
-        return Mathf.Clamp(currentMana / mana, 0, 1);
+        return Mathf.Clamp(currentMana / resources.mana, 0, 1);
     }
 }

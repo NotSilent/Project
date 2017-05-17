@@ -19,6 +19,9 @@ public class PlayerUI : MonoBehaviour
         healthStartingSize = healthBar.rectTransform.sizeDelta;
         staminaStartingSize = staminaBar.rectTransform.sizeDelta;
         manaStartingSize = manaBar.rectTransform.sizeDelta;
+        
+        staminaBar.color = new Color(staminaBar.color.r, staminaBar.color.g, staminaBar.color.b, 0);
+        manaBar.color = new Color(manaBar.color.r, manaBar.color.g, manaBar.color.b, 0);
     }
 
     // TODO Don't hardcode UI
@@ -30,11 +33,28 @@ public class PlayerUI : MonoBehaviour
     public void UpdateStaminaBar(float relativeStamina)
     {
         staminaBar.rectTransform.sizeDelta = new Vector2(staminaStartingSize.x, staminaStartingSize.y * relativeStamina);
+
+        if (relativeStamina < 1)
+        {
+            staminaBar.color = new Color(staminaBar.color.r, staminaBar.color.g, staminaBar.color.b, 255);
+        }
+        else
+        {
+            staminaBar.color = new Color(staminaBar.color.r, staminaBar.color.g, staminaBar.color.b, 0);
+        }
     }
 
     public void UpdateManaBar(float relativeMana)
     {
-        Debug.Log(relativeMana);
         manaBar.rectTransform.sizeDelta = new Vector2(manaStartingSize.x, manaStartingSize.y * relativeMana);
+
+        if (relativeMana < 1)
+        {
+            manaBar.color = new Color(manaBar.color.r, manaBar.color.g, manaBar.color.b, 255);
+        }
+        else
+        {
+            manaBar.color = new Color(manaBar.color.r, manaBar.color.g, manaBar.color.b, 0);
+        }
     }
 }
