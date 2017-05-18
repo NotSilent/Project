@@ -20,6 +20,9 @@ public class Enemy : MonoBehaviour, IDamageable
     private Vector2 startingSize;
     private float currentHealth;
 
+    public delegate void EnemyEvent(GameObject caller);
+    public event EnemyEvent OnEnemyDeath;
+
     private void Start()
     {
         target = GameObject.FindObjectOfType<Player>().gameObject;
@@ -56,6 +59,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
         if (currentHealth <= 0)
         {
+            OnEnemyDeath(gameObject);
             Destroy(gameObject);
         }
 

@@ -7,6 +7,8 @@ public class Door : MonoBehaviour, IUsable
 {
     [SerializeField] private bool isTriggerOnly = false;
     [SerializeField] private new ParticleSystem particleSystem;
+    [SerializeField] private AudioClip hover;
+    [SerializeField] private AudioClip deny;
 
     private AudioSource audioSource;
     private Animator animator;
@@ -25,6 +27,7 @@ public class Door : MonoBehaviour, IUsable
     {
         if (!isTriggerOnly)
         {
+            audioSource.clip = hover;
             particleSystem.Play();
             audioSource.Play();
         }
@@ -50,6 +53,11 @@ public class Door : MonoBehaviour, IUsable
                 isClosed = true;
                 animator.SetTrigger("tClose");
             }
+        }
+        else
+        {
+            audioSource.clip = deny;
+            audioSource.Play();
         }
     }
 }
