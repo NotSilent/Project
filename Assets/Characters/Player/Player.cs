@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -31,8 +32,10 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField]
     private Resources resources;
 
+    private Animator animator;
     private new Collider collider;
     private Rigidbody rigidBody;
+    private AudioSource audioSource;
     private GameObject currentTarget;
     private float timeSinceLastAttack;
     private float currentHealth;
@@ -46,8 +49,10 @@ public class Player : MonoBehaviour, IDamageable
 
     private void Start()
     {
+        animator = GetComponent<Animator>();
         collider = GetComponent<Collider>();
         rigidBody = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
 
         timeSinceLastAttack = attackCooldown;
         currentHealth = resources.health;
@@ -96,6 +101,14 @@ public class Player : MonoBehaviour, IDamageable
         }
         
         rigidBody.velocity = direction * speed + new Vector3(0, rigidBody.velocity.y, 0);
+
+        if(rigidBody.velocity.sqrMagnitude > 0.1)
+        {
+            animator.SetBool("isWalking", true);
+        } else
+        {
+            animator.SetBool("isWalking", false);
+        }
     }
 
     private void OnDisable()
@@ -142,6 +155,7 @@ public class Player : MonoBehaviour, IDamageable
                 float distanceFromPlayer = Vector3.Distance(gameObject.transform.position, currentTarget.transform.position);
                 if (distanceFromPlayer < range)
                 {
+                    animator.SetBool("isAttacking", true);
                     iDamageable.TakeDamage(damage);
                     timeSinceLastAttack = 0f;
                     currentStamina -= resources.basicStaminaCost;
@@ -234,13 +248,24 @@ public class Player : MonoBehaviour, IDamageable
     {
         currentHealth -= damage;
 
+        if (!audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
+
         if (currentHealth <= 0)
         {
-            // TODO Possible OnPlayerDeathEvent
             Camera.main.transform.parent = transform.parent;
             Destroy(gameObject);
+            // TODO Pass OnPlayerDeath to level manager
+            SceneManager.LoadScene("Death");
         }
 
         playerUI.UpdateHealthBar(GetRelativeHealth());
+    }
+
+    private void AnimationEventSetIsAttackingFalse()
+    {
+        animator.SetBool("isAttacking", false);
     }
 }

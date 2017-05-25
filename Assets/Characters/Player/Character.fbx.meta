@@ -96,7 +96,191 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Armature|Idle
+      takeName: Armature|Idle
+      firstFrame: 0
+      lastFrame: 59
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/FootControl.L
+        weight: 1
+      - path: Armature/FootControl.L/FootControl.L_end
+        weight: 1
+      - path: Armature/FootControl.R
+        weight: 1
+      - path: Armature/FootControl.R/FootControl.R_end
+        weight: 1
+      - path: Armature/Pole.L
+        weight: 1
+      - path: Armature/Pole.L/Pole.L_end
+        weight: 1
+      - path: Armature/Pole.R
+        weight: 1
+      - path: Armature/Pole.R/Pole.R_end
+        weight: 1
+      - path: Armature/Stomach
+        weight: 1
+      - path: Armature/Stomach/UpperBody
+        weight: 1
+      - path: Armature/Stomach/UpperBody/Neck
+        weight: 1
+      - path: Armature/Stomach/UpperBody/Neck/Head
+        weight: 1
+      - path: Armature/Stomach/UpperBody/Neck/Head/Head_end
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.L
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.L/LowerArm.L
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.L/LowerArm.L/Hand.L
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.L/LowerArm.L/Hand.L/Hand.L_end
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.R
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.R/LowerArm.R
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.R/LowerArm.R/Hand.R
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.R/LowerArm.R/Hand.R/Hand.R_end
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.L
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.L/LowerLeg.L
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.L/LowerLeg.L/Foot.L
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.L/LowerLeg.L/Foot.L/Foot.L_end
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.R
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.R/LowerLeg.R
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.R/LowerLeg.R/Foot.R
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.R/LowerLeg.R/Foot.R/Foot.R_end
+        weight: 1
+      - path: Body
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature|Walk
+      takeName: Armature|Walk
+      firstFrame: 0
+      lastFrame: 59
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/FootControl.L
+        weight: 1
+      - path: Armature/FootControl.L/FootControl.L_end
+        weight: 1
+      - path: Armature/FootControl.R
+        weight: 1
+      - path: Armature/FootControl.R/FootControl.R_end
+        weight: 1
+      - path: Armature/Pole.L
+        weight: 1
+      - path: Armature/Pole.L/Pole.L_end
+        weight: 1
+      - path: Armature/Pole.R
+        weight: 1
+      - path: Armature/Pole.R/Pole.R_end
+        weight: 1
+      - path: Armature/Stomach
+        weight: 1
+      - path: Armature/Stomach/UpperBody
+        weight: 1
+      - path: Armature/Stomach/UpperBody/Neck
+        weight: 1
+      - path: Armature/Stomach/UpperBody/Neck/Head
+        weight: 1
+      - path: Armature/Stomach/UpperBody/Neck/Head/Head_end
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.L
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.L/LowerArm.L
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.L/LowerArm.L/Hand.L
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.L/LowerArm.L/Hand.L/Hand.L_end
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.R
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.R/LowerArm.R
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.R/LowerArm.R/Hand.R
+        weight: 1
+      - path: Armature/Stomach/UpperBody/UpperArm.R/LowerArm.R/Hand.R/Hand.R_end
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.L
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.L/LowerLeg.L
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.L/LowerLeg.L/Foot.L
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.L/LowerLeg.L/Foot.L/Foot.L_end
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.R
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.R/LowerLeg.R
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.R/LowerLeg.R/Foot.R
+        weight: 1
+      - path: Armature/Stomach/UpperLeg.R/LowerLeg.R/Foot.R/Foot.R_end
+        weight: 1
+      - path: Body
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []

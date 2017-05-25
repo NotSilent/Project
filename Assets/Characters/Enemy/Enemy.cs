@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private GameObject currentTarget;
     private Rigidbody rigidBody;
+    private AudioSource audioSource;
     private NavMeshAgent navMeshAgent;
     private Vector2 startingUISize;
     private float currentHealth;
@@ -32,6 +33,7 @@ public class Enemy : MonoBehaviour, IDamageable
         Assert.IsNotNull(healthBar, "Health bar not found, please wire correctly.");
 
         rigidBody = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
         navMeshAgent = GetComponent<NavMeshAgent>();
 
         startingUISize = healthBar.rectTransform.sizeDelta;
@@ -66,6 +68,11 @@ public class Enemy : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+
+        if (!audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
 
         if (currentHealth <= 0)
         {
