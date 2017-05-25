@@ -23,8 +23,7 @@ public class PlayerUI : MonoBehaviour
         staminaBar.color = new Color(staminaBar.color.r, staminaBar.color.g, staminaBar.color.b, 0);
         manaBar.color = new Color(manaBar.color.r, manaBar.color.g, manaBar.color.b, 0);
     }
-
-    // TODO Don't hardcode UI
+    
     public void UpdateHealthBar(float relativeHealth)
     {
         healthBar.rectTransform.sizeDelta = new Vector2(healthStartingSize.x * relativeHealth, healthStartingSize.y);

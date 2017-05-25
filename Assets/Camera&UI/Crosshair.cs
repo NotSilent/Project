@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 public class Crosshair : MonoBehaviour
@@ -8,6 +9,7 @@ public class Crosshair : MonoBehaviour
     private new Camera camera;
     private Image crosshairImage;
     private GameObject crosshairTarget;
+    private GameObject player;
 
     public delegate void CrosshairEvent(GameObject crosshairTarget);
     public event CrosshairEvent OnCrosshairTargetChange;
@@ -17,6 +19,7 @@ public class Crosshair : MonoBehaviour
         camera = Camera.main;
         crosshairImage = GetComponent<Image>();
         crosshairTarget = null;
+        player = GetPlayer();
     }
 
     private void Update()
@@ -81,8 +84,19 @@ public class Crosshair : MonoBehaviour
         RaycastHit raycastHit;
         if (Physics.Raycast(ray, out raycastHit))
         {
+            if(raycastHit.transform.gameObject != player)
             return raycastHit.transform.gameObject;
         }
         return null;
+    }
+
+    private GameObject GetPlayer()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        Assert.IsNotNull(players, "Player not found in scene. Please add one.");
+        Assert.IsFalse(players.Length > 1, "Too many players in scene. Please delete all but one player.");
+
+        return players[0].gameObject;
     }
 }

@@ -13,44 +13,54 @@ public class Enemy : MonoBehaviour, IDamageable
     [SerializeField] float health;
     [SerializeField] private float patrolRadius = 5f;
     [SerializeField] private float engageRadius = 2f;
+    [SerializeField] private float attackCooldown = 2f;
+    [SerializeField] private float damage = 10f;
 
-    private GameObject target;
+    private GameObject currentTarget;
     private Rigidbody rigidBody;
     private NavMeshAgent navMeshAgent;
-    private Vector2 startingSize;
+    private Vector2 startingUISize;
     private float currentHealth;
+    private float timeSinceLastAttack;
 
     public delegate void EnemyEvent(GameObject caller);
     public event EnemyEvent OnEnemyDeath;
 
     private void Start()
     {
-        target = GameObject.FindObjectOfType<Player>().gameObject;
+        currentTarget = GameObject.FindObjectOfType<Player>().gameObject;
         Assert.IsNotNull(healthBar, "Health bar not found, please wire correctly.");
 
         rigidBody = GetComponent<Rigidbody>();
         navMeshAgent = GetComponent<NavMeshAgent>();
 
-        startingSize = healthBar.rectTransform.sizeDelta;
+        startingUISize = healthBar.rectTransform.sizeDelta;
         currentHealth = health;
+
+        timeSinceLastAttack = 0f;
     }
 
     private void Update()
     {
-            if (Vector3.Distance(transform.position, target.transform.position) < engageRadius)
+        if (currentTarget)
+        {
+            timeSinceLastAttack += Time.deltaTime;
+            if (Vector3.Distance(transform.position, currentTarget.transform.position) < engageRadius)
             {
                 rigidBody.velocity = Vector3.zero;
+                ManageDamageableTarget();
             }
-            else if (Vector3.Distance(transform.position, target.transform.position) < patrolRadius)
+            else if (Vector3.Distance(transform.position, currentTarget.transform.position) < patrolRadius)
             {
                 navMeshAgent.enabled = true;
-                navMeshAgent.SetDestination(target.transform.position);
+                navMeshAgent.SetDestination(currentTarget.transform.position);
             }
             else
             {
                 navMeshAgent.enabled = false;
                 rigidBody.velocity = Vector3.zero;
             }
+        }
     }
 
     public void TakeDamage(float damage)
@@ -63,11 +73,24 @@ public class Enemy : MonoBehaviour, IDamageable
             Destroy(gameObject);
         }
 
-        healthBar.rectTransform.sizeDelta = new Vector2(startingSize.x * GetRelativeHealth(), startingSize.y); 
+        healthBar.rectTransform.sizeDelta = new Vector2(startingUISize.x * GetRelativeHealth(), startingUISize.y);
     }
 
     private float GetRelativeHealth()
     {
         return Mathf.Clamp(currentHealth / health, 0, 1);
+    }
+
+    private void ManageDamageableTarget()
+    {
+        IDamageable iDamageable = currentTarget.GetComponent<IDamageable>();
+        if (iDamageable != null)
+        {
+            if (timeSinceLastAttack > attackCooldown)
+            {
+                iDamageable.TakeDamage(damage);
+                timeSinceLastAttack = 0f;
+            }
+        }
     }
 }

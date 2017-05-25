@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     [SerializeField] private Crosshair crosshair;
     [SerializeField] private PlayerUI playerUI;
@@ -33,7 +34,7 @@ public class Player : MonoBehaviour
     private new Collider collider;
     private Rigidbody rigidBody;
     private GameObject currentTarget;
-    private float timeSInceLastAttack;
+    private float timeSinceLastAttack;
     private float currentHealth;
     private float currentStamina;
     private float currentMana;
@@ -48,7 +49,7 @@ public class Player : MonoBehaviour
         collider = GetComponent<Collider>();
         rigidBody = GetComponent<Rigidbody>();
 
-        timeSInceLastAttack = attackCooldown;
+        timeSinceLastAttack = attackCooldown;
         currentHealth = resources.health;
         currentStamina = resources.stamina;
         currentMana = resources.mana;
@@ -58,7 +59,7 @@ public class Player : MonoBehaviour
     {
         RegenerateResources();
 
-        timeSInceLastAttack += Time.deltaTime;
+        timeSinceLastAttack += Time.deltaTime;
         if (Input.GetMouseButton(0))
         {
             if (currentTarget)
@@ -82,17 +83,18 @@ public class Player : MonoBehaviour
                 ManageUsableTarget();
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        Vector3 direction = new Vector3(-Input.GetAxis("Horizontal"), 0, -Input.GetAxis("Vertical"));
+        direction = transform.TransformDirection(direction);
 
         if (Input.GetKeyDown(KeyCode.Space) && IsPlayerGrounded())
         {
             rigidBody.velocity += Vector3.up * jumpPower;
         }
-    }
-
-    private void FixedUpdate()
-    {
-        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        direction = transform.TransformDirection(direction);
+        
         rigidBody.velocity = direction * speed + new Vector3(0, rigidBody.velocity.y, 0);
     }
 
@@ -135,13 +137,13 @@ public class Player : MonoBehaviour
         IDamageable iDamageable = currentTarget.GetComponent<IDamageable>();
         if (iDamageable != null)
         {
-            if (timeSInceLastAttack > attackCooldown && currentStamina > resources.basicStaminaCost)
+            if (timeSinceLastAttack > attackCooldown && currentStamina > resources.basicStaminaCost)
             {
                 float distanceFromPlayer = Vector3.Distance(gameObject.transform.position, currentTarget.transform.position);
                 if (distanceFromPlayer < range)
                 {
-                    iDamageable.TakeDamage(50f);
-                    timeSInceLastAttack = 0f;
+                    iDamageable.TakeDamage(damage);
+                    timeSinceLastAttack = 0f;
                     currentStamina -= resources.basicStaminaCost;
                     playerUI.UpdateStaminaBar(GetRelativeStamina());
                 }
@@ -151,7 +153,7 @@ public class Player : MonoBehaviour
 
     private void ShootProjectile()
     {
-        if (timeSInceLastAttack > attackCooldown && currentMana > projectilePrefab.GetComponent<Projectile>().ManaCost)
+        if (timeSinceLastAttack > attackCooldown && currentMana > projectilePrefab.GetComponent<Projectile>().ManaCost)
         {
             Vector3 targetWorldSpaceCoords = GetTargetWorldSpace();
             if (targetWorldSpaceCoords == Vector3.zero)
@@ -167,7 +169,7 @@ public class Player : MonoBehaviour
             projectile.LaunchProjectile(launchDirection);
             currentMana -= projectile.ManaCost;
             playerUI.UpdateManaBar(GetRelativeMana());
-            timeSInceLastAttack = 0f;
+            timeSinceLastAttack = 0f;
         }
     }
 
@@ -219,12 +221,26 @@ public class Player : MonoBehaviour
 
     private bool IsPlayerGrounded()
     {
-        Collider[] colliders = Physics.OverlapBox(groundCheck.transform.position, Vector3.one * 0.005f);
+        Collider[] colliders = Physics.OverlapBox(groundCheck.transform.position, Vector3.one * 0.1f);
 
-        if(colliders.Length != 1 && colliders[0] != collider)
+        if (colliders.Length != 1 && colliders[0] != collider)
         {
             return true;
         }
         return false;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+
+        if (currentHealth <= 0)
+        {
+            // TODO Possible OnPlayerDeathEvent
+            Camera.main.transform.parent = transform.parent;
+            Destroy(gameObject);
+        }
+
+        playerUI.UpdateHealthBar(GetRelativeHealth());
     }
 }
